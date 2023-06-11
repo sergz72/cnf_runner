@@ -82,7 +82,7 @@ fn find_string_variable_value(name: &str, parameters: &HashMap<String, String>) 
         .ok_or(build_invalid_data_error_string(format!("parameter {} not found", name)))
 }
 
-pub fn build_var_list(doc: &Yaml, source_doc: &Yaml) -> Result<HashMap<String, String>, Error>{
+pub fn build_var_list(source_doc: &Yaml) -> Result<HashMap<String, String>, Error>{
     let vars = source_doc.as_vec().ok_or(build_invalid_data_error_str("Source parameter should be a vector"))?;
     let mut result = HashMap::new();
     for var in vars {

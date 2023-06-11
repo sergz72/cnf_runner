@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-use std::{fs, io};
+use std::fs;
 use std::io::{Error, ErrorKind};
 use std::process::{Command, Stdio};
 use yaml_rust::{Yaml, YamlLoader};

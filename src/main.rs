@@ -32,12 +32,12 @@ fn main() -> Result<(), Error> {
     let mappings = doc["Mappings"].as_hash()
         .ok_or(build_invalid_data_error_str("No mappings found"))?;
     let source_doc = find_source_doc(doc, source)?;
-    let var_list = build_var_list(doc, source_doc)?;
+    let var_list = build_var_list(source_doc)?;
     let mut env_vars: HashMap<String, String> = HashMap::new();
     for (name, procedure_name) in var_list {
         let (text, variables) =
             get_procedure(procedure_name, resources, mappings, &parameters)?;
-        let mut final_variables: HashMap<String, String> = variables.iter()
+        let final_variables: HashMap<String, String> = variables.iter()
             .map(|(name, value)|(name.clone(), apply_replaces(value, &replaces)))
             .collect();
         let value = replace(text, final_variables, &parameters)?;
