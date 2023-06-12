@@ -37,10 +37,10 @@ pub fn build_replaces(replaces_option: Option<&String>) -> Result<HashMap<String
 
 pub fn replace(text: String, variables: HashMap<String, String>, parameters: &HashMap<String, String>) -> Result<String, Error> {
     let mut result = text;
-    for (name, value) in variables {
+    for (name, value) in parameters {
         result = result.replace(("${".to_string() + name.as_str() + "}").as_str(), value.as_str());
     }
-    for (name, value) in parameters {
+    for (name, value) in variables {
         result = result.replace(("${".to_string() + name.as_str() + "}").as_str(), value.as_str());
     }
     Ok(result)
