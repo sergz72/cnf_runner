@@ -72,6 +72,9 @@ fn find_array_variable_value(array: &Array, mappings: &Hash, parameters: &HashMa
     if let Some(i) = value_yaml.as_i64() {
         return Ok(i.to_string());
     }
+    if let Some(i) = value_yaml.as_f64() {
+        return Ok(i.to_string());
+    }
     Err(build_invalid_data_error_string(format!("key {} in {} should be a string", value_key, section_name)))
 }
 
