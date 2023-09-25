@@ -35,14 +35,26 @@ fn main() -> Result<(), Error> {
     let var_list = build_var_list(source_doc)?;
     let mut env_vars: HashMap<String, String> = HashMap::new();
     for (name, procedure_name) in var_list {
-        let (text, variables) =
-            get_procedure(procedure_name, resources, mappings, &parameters)?;
-        let final_variables: HashMap<String, String> = variables.iter()
-            .map(|(name, value)|(name.clone(), apply_replaces(value, &replaces)))
-            .collect();
-        let value = replace(text, final_variables, &parameters)?;
-        println!("{} {}", name, value);
-        env_vars.insert(name, value);
+        if let Some(value) = parameters.get(&procedure_name) {
+            println!("{} {}", name, value);
+            env_vars.insert(name, value.clone());
+        } else {
+            let (text, variables) =
+                get_procedure(procedure_name, resources, mappings, &parameters)?;
+            let final_variables: HashMap<String, String> = variables.iter()
+                .map(|(name, value)| (name.clone(), apply_replaces(value, &replaces)))
+                .collect();
+            let value = replace(text, final_variables, &parameters)?;
+            println!("{} {}", name, value);
+            env_vars.insert(name, value);
+        }
+    }
+    if let Some(secrets_env_file) = parameters.get("secretsEnvFile") {
+        let parameters = parse_env_file(secrets_env_file.clone())?;
+        for (name, value) in parameters {
+            println!("{} {}", name, value);
+            env_vars.insert(name, value);
+        }
     }
     execute(exec_file, env_vars)
 }
